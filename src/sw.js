@@ -1,4 +1,4 @@
-var CACHE_NAME = "2023-05-21 14:10";
+var CACHE_NAME = "2023-06-12 10:15";
 var urlsToCache = [
   "/tegaki-50masu/",
   "/tegaki-50masu/index.js",
@@ -9,7 +9,6 @@ var urlsToCache = [
   "/tegaki-50masu/mp3/correct3.mp3",
   "/tegaki-50masu/favicon/favicon.svg",
   "https://marmooo.github.io/fonts/textar-light.woff2",
-  "https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css",
   "https://cdn.jsdelivr.net/npm/signature_pad@4.1.5/dist/signature_pad.umd.min.js",
   "https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@4.6.0/dist/tf.min.js",
 ];

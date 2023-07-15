@@ -1,4 +1,4 @@
-var CACHE_NAME = "2023-07-04 00:00";
+var CACHE_NAME = "2023-07-15 17:34";
 var urlsToCache = [
   "/tegaki-50masu/",
   "/tegaki-50masu/index.js",
@@ -10,7 +10,7 @@ var urlsToCache = [
   "/tegaki-50masu/favicon/favicon.svg",
   "https://marmooo.github.io/fonts/textar-light.woff2",
   "https://cdn.jsdelivr.net/npm/signature_pad@4.1.5/dist/signature_pad.umd.min.js",
-  "https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@4.6.0/dist/tf.min.js",
+  "https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@4.8.0/dist/tf.min.js",
 ];
 
 self.addEventListener("install", function (event) {

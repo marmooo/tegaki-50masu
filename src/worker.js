@@ -20,7 +20,7 @@ async function loadModel() {
   model = await tf.loadGraphModel("model/model.json");
 }
 
-importScripts("https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@4.8.0/dist/tf.min.js");
+importScripts("https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@4.9.0/dist/tf.min.js");
 
 let model;
 loadModel();

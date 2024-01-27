@@ -308,7 +308,7 @@ worker.addEventListener("message", (e) => {
     .querySelector("td.table-danger");
   cursor.textContent = reply;
   if (cursor.dataset.answer == reply) {
-    playAudio("correct");
+    playAudio("correct", 0.3);
     correctCount += 1;
     moveCursorNext(cursor);
     pads.forEach((pad) => {

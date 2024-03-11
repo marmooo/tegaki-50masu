@@ -10,7 +10,7 @@ const canvasCache = document.createElement("canvas").getContext("2d", {
   willReadFrequently: true,
 });
 const pads = initSignaturePads(canvases);
-const audioContext = new AudioContext();
+const audioContext = new globalThis.AudioContext();
 const audioBufferCache = {};
 loadAudio("end", "mp3/end.mp3");
 loadAudio("correct", "mp3/correct3.mp3");
@@ -338,7 +338,7 @@ document.getElementById("courseOption").onchange = (event) => {
   initTable();
 };
 document.getElementById("gradeOption").onchange = initTable;
-window.onresize = initTableFontSize;
+globalThis.onresize = initTableFontSize;
 document.addEventListener("click", unlockAudio, {
   once: true,
   useCapture: true,

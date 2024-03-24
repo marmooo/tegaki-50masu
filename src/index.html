@@ -59,7 +59,7 @@
       }
       #table { height:100%; table-layout:fixed; }
       #table td, #table th { padding:0; }
-      canvas { -webkit-user-select:none; }
+      canvas { outline:1px solid #000; -webkit-user-select:none; }
       .eraser { touch-action:none; }
       html[data-bs-theme="dark"] .favicon { filter: invert(1) hue-rotate(180deg); }
       html[data-bs-theme="dark"] canvas { filter: invert(1) hue-rotate(180deg); }
@@ -114,13 +114,13 @@
         <div id="canvases" class="d-flex justify-content-center align-items-center">
           <div class="d-flex">
             <div class="col p-0 text-center">
-              <canvas id="canvas0" width="120" height="160" class="border border-end-0 border-secondary d-block"></canvas>
+              <canvas id="canvas0" width="120" height="160" class="d-block"></canvas>
               <button title="書き直し" class="eraser btn p-0" type="button">
                 <svg width="32" height="32" viewBox="0 0 24 24"><use href="#eraser"/></svg>
               </button>
             </div>
             <div class="col p-0 text-center">
-              <canvas id="canvas1" width="120" height="160" class="border border-secondary d-block"></canvas>
+              <canvas id="canvas1" width="120" height="160" class="d-block"></canvas>
               <button title="書き直し" class="eraser btn p-0" type="button">
                 <svg width="32" height="32" viewBox="0 0 24 24"><use href="#eraser"/></svg>
               </button>

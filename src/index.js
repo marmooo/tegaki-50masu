@@ -3,10 +3,8 @@ import signaturePad from "https://cdn.jsdelivr.net/npm/signature_pad@4.1.7/+esm"
 const countPanel = document.getElementById("countPanel");
 const infoPanel = document.getElementById("infoPanel");
 const scorePanel = document.getElementById("scorePanel");
-const canvases = [
-  ...document.getElementById("canvases")
-    .getElementsByTagName("canvas"),
-];
+const canvasContainer = document.getElementById("canvasContainer");
+const canvases = [...canvasContainer.getElementsByTagName("canvas")];
 const canvasCache = document.createElement("canvas").getContext("2d", {
   alpha: false,
   willReadFrequently: true,
@@ -218,6 +216,18 @@ function moveCursorNext(obj) {
   newObj.className = "table-danger";
 }
 
+function eraserEvent(pad) {
+  pad.clear();
+  pad.canvas.dataset.predict = "";
+  const reply = new Array(2).fill("");
+  for (let j = 0; j < canvases.length; j++) {
+    reply[j] = canvases[j].dataset.predict;
+  }
+  const cursor = document.getElementById("table")
+    .querySelector("td.table-danger");
+  cursor.textContent = reply.join("");
+}
+
 function initSignaturePads(canvases) {
   const pads = [];
   for (let i = 0; i < canvases.length; i++) {
@@ -241,17 +251,11 @@ function initSignaturePads(canvases) {
       }
     });
     const eraser = canvas.nextElementSibling;
-    eraser.onclick = () => {
-      pad.clear();
-      canvas.dataset.predict = "";
-      const reply = new Array(2).fill("");
-      for (let j = 0; j < canvases.length; j++) {
-        reply[j] = canvases[j].dataset.predict;
-      }
-      const cursor = document.getElementById("table")
-        .querySelector("td.table-danger");
-      cursor.textContent = reply.join("");
-    };
+    if (navigator.maxTouchPoints > 0) {
+      eraser.ontouchstart = () => eraserEvent(pad);
+    } else {
+      eraser.onclick = () => eraserEvent(pad);
+    }
     pads.push(pad);
   }
   return pads;
@@ -346,3 +350,20 @@ document.addEventListener("click", unlockAudio, {
   once: true,
   useCapture: true,
 });
+
+if (CSS.supports("-webkit-touch-callout: default")) { // iOS
+  // prevent double click zoom
+  document.addEventListener("dblclick", (event) => event.preventDefault());
+  // prevent text selection
+  const preventDefault = (event) => event.preventDefault();
+  canvasContainer.addEventListener("touchstart", () => {
+    document.addEventListener("touchstart", preventDefault, {
+      passive: false,
+    });
+  });
+  canvasContainer.addEventListener("touchend", () => {
+    document.removeEventListener("touchstart", preventDefault, {
+      passive: false,
+    });
+  });
+}

@@ -55,11 +55,13 @@
         #masu { max-width:calc(100% - 243px); max-height:calc(100vh - 84px); aspect-ratio:2/1; padding-right:1rem; }
       }
       @media (orientation: portrait) {
-        #masu { max-width:100%; max-height:calc(100vh - 316px); aspect-ratio:2/1; padding-bottom:1rem; }
+        #canvasContainer { width:100%; padding-top: 1rem; }
+        #masu { max-width:100%; max-height:calc(100vh - 316px); aspect-ratio:2/1; }
       }
+      #canvasContainer { user-select:none; -webkit-user-select:none; }
       #table { height:100%; table-layout:fixed; }
       #table td, #table th { padding:0; }
-      canvas { outline:1px solid #000; -webkit-user-select:none; }
+      canvas { outline:1px solid #000; }
       .eraser { touch-action:none; }
       html[data-bs-theme="dark"] .favicon { filter: invert(1) hue-rotate(180deg); }
       html[data-bs-theme="dark"] canvas { filter: invert(1) hue-rotate(180deg); }
@@ -111,7 +113,7 @@
             </tbody>
           </table>
         </div>
-        <div id="canvases" class="d-flex justify-content-center align-items-center">
+        <div id="canvasContainer" class="d-flex justify-content-center align-items-center">
           <div class="d-flex">
             <div class="col p-0 text-center">
               <canvas id="canvas0" width="120" height="160" class="d-block"></canvas>

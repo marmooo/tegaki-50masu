@@ -14,6 +14,7 @@ const audioContext = new globalThis.AudioContext();
 const audioBufferCache = {};
 loadAudio("end", "mp3/end.mp3");
 loadAudio("correct", "mp3/correct3.mp3");
+let firstRun = true;
 let correctCount = 0;
 loadConfig();
 
@@ -92,6 +93,7 @@ function startGameTimer() {
 
 let countdownTimer;
 function countdown() {
+  if (firstRun) predict(pads[0].canvas, 0, 0, 0);
   initTable();
   clearTimeout(countdownTimer);
   countPanel.classList.remove("d-none");
@@ -246,8 +248,7 @@ function initSignaturePads(canvases) {
         count += data[i].points.length;
       }
       if (5 < count && count < 100) {
-        const pos = canvases.indexOf(pad.canvas);
-        predict(pad.canvas, pos, data.length, count);
+        predict(pad.canvas, i, data.length, count);
       }
     });
     const eraser = canvas.nextElementSibling;
@@ -285,8 +286,10 @@ function getReplies(predicted) {
     predicts[i] = canvases[i].dataset.predict;
   }
   if (predicted.klass != 1 && predicted.count < 15) {
+    // 短すぎる線は無視する
     predicted.klass = "";
-  } else if (predicted.kaku < kakusus[predicted.klass]) { // 画数が足りないものは不正解とする
+  } else if (predicted.kaku < kakusus[predicted.klass]) {
+    // 画数不足は不正解とする
     predicted.klass = "";
   }
   canvas.dataset.predict = predicted.klass;
@@ -309,12 +312,15 @@ initTable();
 initTableFontSize();
 
 const worker = new Worker("worker.js");
-worker.addEventListener("message", (e) => {
-  const reply = getReplies(e.data).join("");
-  const cursor = document.getElementById("table")
-    .querySelector("td.table-danger");
-  cursor.textContent = reply;
-  if (cursor.dataset.answer == reply) {
+worker.addEventListener("message", (event) => {
+  if (firstRun) {
+    firstRun = false;
+  } else {
+    const reply = getReplies(event.data).join("");
+    const cursor = document.getElementById("table")
+      .querySelector("td.table-danger");
+    cursor.textContent = reply;
+    if (cursor.dataset.answer != reply) return;
     playAudio("correct", 0.3);
     correctCount += 1;
     moveCursorNext(cursor);

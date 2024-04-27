@@ -14,7 +14,6 @@ const audioContext = new globalThis.AudioContext();
 const audioBufferCache = {};
 loadAudio("end", "mp3/end.mp3");
 loadAudio("correct", "mp3/correct3.mp3");
-let firstRun = true;
 let correctCount = 0;
 loadConfig();
 
@@ -93,7 +92,6 @@ function startGameTimer() {
 
 let countdownTimer;
 function countdown() {
-  if (firstRun) predict(pads[0].canvas, 0, 0, 0);
   initTable();
   clearTimeout(countdownTimer);
   countPanel.classList.remove("d-none");
@@ -300,12 +298,7 @@ function getReplies(predicted) {
 
 function predict(canvas, pos, kaku, count) {
   const imageData = getImageData(canvas);
-  worker.postMessage({
-    pos: pos,
-    imageData: imageData,
-    kaku: kaku,
-    count: count,
-  });
+  worker.postMessage({ pos, imageData, kaku, count });
 }
 
 initTable();
@@ -313,31 +306,27 @@ initTableFontSize();
 
 const worker = new Worker("worker.js");
 worker.addEventListener("message", (event) => {
-  if (firstRun) {
-    firstRun = false;
-  } else {
-    const reply = getReplies(event.data).join("");
-    const cursor = document.getElementById("table")
-      .querySelector("td.table-danger");
-    cursor.textContent = reply;
-    if (cursor.dataset.answer != reply) return;
-    playAudio("correct", 0.3);
-    correctCount += 1;
-    moveCursorNext(cursor);
-    pads.forEach((pad) => {
-      pad.clear();
-    });
-    canvases.forEach((canvas) => {
-      canvas.dataset.predict = "";
-    });
-    if (correctCount == 50) {
-      playAudio("end");
-      clearInterval(gameTimer);
-      infoPanel.classList.add("d-none");
-      scorePanel.classList.remove("d-none");
-      const time = (Date.now() - startTime) / 1000;
-      document.getElementById("score").textContent = time;
-    }
+  const reply = getReplies(event.data).join("");
+  const cursor = document.getElementById("table")
+    .querySelector("td.table-danger");
+  cursor.textContent = reply;
+  if (cursor.dataset.answer != reply) return;
+  playAudio("correct", 0.3);
+  correctCount += 1;
+  moveCursorNext(cursor);
+  pads.forEach((pad) => {
+    pad.clear();
+  });
+  canvases.forEach((canvas) => {
+    canvas.dataset.predict = "";
+  });
+  if (correctCount == 50) {
+    playAudio("end");
+    clearInterval(gameTimer);
+    infoPanel.classList.add("d-none");
+    scorePanel.classList.remove("d-none");
+    const time = (Date.now() - startTime) / 1000;
+    document.getElementById("score").textContent = time;
   }
 });
 
@@ -352,6 +341,9 @@ document.getElementById("courseOption").onchange = (event) => {
 };
 document.getElementById("gradeOption").onchange = initTable;
 globalThis.onresize = initTableFontSize;
+document.addEventListener("pointerdown", () => {
+  predict(pads[0].canvas, 0, 0, 0);
+}, { once: true });
 document.addEventListener("click", unlockAudio, {
   once: true,
   useCapture: true,

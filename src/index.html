@@ -52,13 +52,15 @@
         font-size:10rem; width:12rem; height:12rem; line-height:12rem; border-radius: 50%;
         background:tomato; color:black; margin:auto; }
       @media (orientation: landscape) {
-        #masu { max-width:calc(100% - 243px); max-height:calc(100vh - 84px); aspect-ratio:2/1; padding-right:1rem; }
+        #masu { max-width:calc(100% - 308px); max-height:calc(100vh - 84px); aspect-ratio:2/1; }
       }
       @media (orientation: portrait) {
         #masu { max-width:100%; max-height:calc(100vh - 316px); aspect-ratio:2/1; }
       }
       #table { height:100%; table-layout:fixed; }
       #table td, #table th { padding:0; }
+      #signContainer { margin-right:4px; height:160px; }
+      #sign { width:48px; height:48px; }
       canvas { outline:1px solid #000; }
       html[data-bs-theme="dark"] .favicon { filter: invert(1) hue-rotate(180deg); }
       html[data-bs-theme="dark"] canvas { filter: invert(1) hue-rotate(180deg); }
@@ -86,14 +88,15 @@
               <option selected>小2</option>
               <option>小3</option>
               <option>小4</option>
-              <option>小5〜</option>
+              <option>小5</option>
+              <option>中1</option>
             </select>
             <button title="ダークモード切替" id="toggleDarkMode" class="fs-4 btn p-0 ms-1" type="button">🌓</button>
           </div>
         </div>
       </nav>
     </header>
-    <main class="container pt-3 pb-4">
+    <main class="container-xl pt-3 pb-4">
       <noscript>
         <div class="alert alert-warning">JavaScript を ON にしてください</div>
       </noscript>
@@ -112,6 +115,9 @@
         </div>
         <div class="d-flex justify-content-center align-items-center">
           <div id="canvasContainer" class="user-select-none p-2 d-flex">
+            <div id="signContainer" class="d-flex align-items-center d-none">
+              <button id="sign" class="btn btn-secondary rounded-circle fs-4" type="button">＋</button>
+            </div>
             <div class="col p-0 text-center">
               <canvas id="canvas0" width="120" height="160" class="d-block"></canvas>
               <button title="書き直し" class="eraser btn p-0" type="button">

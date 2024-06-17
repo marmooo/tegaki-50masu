@@ -316,17 +316,17 @@ function predict(canvas, pos, kaku, count) {
 }
 
 function initCalc() {
-  document.getElementById("sign").onclick = () => {
+  document.getElementById("sign").onclick = (event) => {
     const cursor = document.getElementById("table")
       .querySelector(".table-danger");
     let reply = cursor.textContent;
     if (cursor.textContent.startsWith("-")) {
       signText = "";
-      document.getElementById("sign").textContent = "＋";
+      event.target.textContent = "＋";
       reply = cursor.textContent.slice(1);
     } else {
       signText = "-";
-      document.getElementById("sign").textContent = "−";
+      event.target.textContent = "−";
       reply = signText + cursor.textContent.slice(0, 2);
     }
     checkAnswer(reply);

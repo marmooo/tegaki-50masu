@@ -1,4 +1,5 @@
 import signaturePad from "https://cdn.jsdelivr.net/npm/signature_pad@5.1.1/+esm";
+import { createWorker } from "https://cdn.jsdelivr.net/npm/emoji-particle@0.0.4/+esm";
 
 const countPanel = document.getElementById("countPanel");
 const infoPanel = document.getElementById("infoPanel");
@@ -10,6 +11,7 @@ const canvasCache = document.createElement("canvas").getContext("2d", {
   willReadFrequently: true,
 });
 const pads = initSignaturePads(canvases);
+const emojiParticle = initEmojiParticle();
 let correctCount = 0;
 let signText = "";
 let audioContext;
@@ -82,6 +84,30 @@ function playAudio(name, volume) {
   gainNode.connect(audioContext.destination);
   sourceNode.connect(gainNode);
   sourceNode.start();
+}
+
+function initEmojiParticle() {
+  const canvas = document.createElement("canvas");
+  Object.assign(canvas.style, {
+    position: "fixed",
+    pointerEvents: "none",
+    top: "0px",
+    left: "0px",
+  });
+  canvas.width = document.documentElement.clientWidth;
+  canvas.height = document.documentElement.clientHeight;
+  document.body.prepend(canvas);
+
+  const offscreen = canvas.transferControlToOffscreen();
+  const worker = createWorker();
+  worker.postMessage({ type: "init", canvas: offscreen }, [offscreen]);
+
+  globalThis.addEventListener("resize", () => {
+    const width = document.documentElement.clientWidth;
+    const height = document.documentElement.clientHeight;
+    worker.postMessage({ type: "resize", width, height });
+  });
+  return { canvas, offscreen, worker };
 }
 
 // +-*/のテストデータ生成範囲を返却
@@ -362,6 +388,18 @@ function checkAnswer(reply) {
   if (answer != reply) return;
   playAudio("correct", 0.3);
   correctCount += 1;
+  if (correctCount % 5 === 0) {
+    for (let i = 0; i < Math.ceil(correctCount / 5); i++) {
+      emojiParticle.worker.postMessage({
+        type: "spawn",
+        options: {
+          particleType: "popcorn",
+          originX: Math.random() * emojiParticle.canvas.width,
+          originY: Math.random() * emojiParticle.canvas.height,
+        },
+      });
+    }
+  }
   signText = "";
   document.getElementById("sign").textContent = "＋";
   moveCursorNext(cursor);
